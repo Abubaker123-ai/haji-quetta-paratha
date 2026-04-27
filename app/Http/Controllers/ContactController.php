@@ -34,6 +34,30 @@ class ContactController extends Controller
         return back()->with('success', 'Aapka message mil gaya! Hum jald rabta karenge.');
     }
 
+    public function apiStore(Request $request)
+    {
+        $request->validate([
+            'name'    => 'required|string|max:255',
+            'phone'   => 'required|string|max:20',
+            'address' => 'nullable|string|max:500',
+            'message' => 'nullable|string|max:1000',
+        ]);
+
+        $contact = Contact::create($request->only('name', 'phone', 'address', 'message'));
+
+        return response()->json(['success' => true, 'message' => 'Contact saved', 'id' => $contact->id], 201);
+    }
+
+    public function apiIndex(Request $request)
+    {
+        if ($request->header('X-Admin-Key') !== config('app.admin_key', 'haji-admin-2024')) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $contacts = Contact::latest()->get(['id', 'name', 'phone', 'address', 'message', 'created_at']);
+        return response()->json($contacts);
+    }
+
     public function adminIndex()
     {
         $contacts = Contact::latest()->get();

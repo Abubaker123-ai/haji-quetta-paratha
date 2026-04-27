@@ -342,39 +342,85 @@ footer{padding:2.5rem 2rem;border-top:2px solid rgba(27,94,32,.1);text-align:cen
 
 /* RESPONSIVE */
 @media(max-width:1024px){
-  .hero-container{grid-template-columns:1fr;text-align:center;gap:2.5rem}
+  .hero-container{grid-template-columns:1fr;text-align:center;gap:2rem}
   .hero-subtitle{margin:0 auto 2rem}
   .hero-buttons{justify-content:center}
-  .story-container{grid-template-columns:1fr;gap:2.5rem}
+  .story-container{grid-template-columns:1fr;gap:2rem}
   .order-container{grid-template-columns:1fr}
   .story-content,.story-visual{transform:translateY(30px)}
   .story-content.visible,.story-visual.visible{transform:translateY(0)}
 }
+
 @media(max-width:768px){
-  .nav-links{display:none;position:fixed;top:68px;left:0;right:0;background:rgba(15,40,16,0.97);backdrop-filter:blur(20px);flex-direction:column;padding:1.2rem 2rem;gap:.1rem;border-bottom:2px solid rgba(255,143,0,.4);box-shadow:0 8px 30px rgba(0,0,0,.5)}
+  /* Hide custom cursor on touch devices */
+  .cursor-dot,.cursor-ring{display:none}
+  body{cursor:auto}
+
+  /* Navbar mobile menu */
+  .nav-links{display:none;position:fixed;top:65px;left:0;right:0;background:rgba(15,40,16,0.97);backdrop-filter:blur(20px);flex-direction:column;padding:1rem 1.5rem;gap:.1rem;border-bottom:2px solid rgba(255,143,0,.4);box-shadow:0 8px 30px rgba(0,0,0,.5)}
   .nav-links.open{display:flex}
   .nav-links li{border-bottom:1px solid rgba(255,255,255,.07)}
-  .nav-links li:last-child{border-bottom:none;padding-top:.6rem}
-  .nav-links a{background:linear-gradient(90deg,#ffffff 0%,#FFD54F 50%,#FF8F00 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:.95rem;font-weight:700;padding:.75rem 0;display:block}
+  .nav-links li:last-child{border-bottom:none;padding-top:.5rem}
+  .nav-links a{background:linear-gradient(90deg,#ffffff 0%,#FFD54F 50%,#FF8F00 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:.95rem;font-weight:700;padding:.7rem 0;display:block}
   .nav-links a.active{background:linear-gradient(90deg,#FFB300 0%,#FF8F00 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
   .nav-links .nav-wa-btn{background:#25D366 !important;-webkit-text-fill-color:#fff !important;padding:.6rem 1.2rem;border-radius:50px;display:inline-flex;width:fit-content}
   .hamburger{display:flex}
+
+  /* Hero */
+  .hero{padding:5rem 1.2rem 3rem}
   .hero-visual{display:none}
+  .hero-title{font-size:clamp(1.9rem,6vw,2.8rem)}
+
+  /* Sections spacing */
+  .specialties{padding:2.5rem 1.2rem}
+  .why-us{padding:2.5rem 1.2rem}
+  .story{padding:2.5rem 1.2rem}
+  .cta-section{padding:2.5rem 1.2rem}
+  .menu-section{padding:1.2rem 1.2rem 3rem}
+  .order-section{padding:1.2rem 1.2rem 3rem}
+  .menu-hero,.order-hero{padding:5.5rem 1.2rem 2rem}
+
+  /* Cards & grids */
+  .cta-card{padding:2rem 1.2rem}
+  .why-grid{grid-template-columns:1fr 1fr}
+  .menu-grid{grid-template-columns:1fr}
   .form-row{grid-template-columns:1fr}
   .qty-grid{gap:.35rem}
-  .menu-grid{grid-template-columns:1fr}
-  .cta-card{padding:2.5rem 1.5rem}
-  .why-grid{grid-template-columns:1fr 1fr}
-  .specialties,.story,.cta-section{padding:3rem 1.5rem}
-  .menu-section,.order-section{padding:1.5rem 1.5rem 4rem}
+  .section-header{margin-bottom:2rem}
+
+  /* WhatsApp float */
   .whatsapp-float span{display:none}
-  .whatsapp-float{padding:.85rem}
+  .whatsapp-float{padding:.85rem;bottom:1.2rem;right:1.2rem}
 }
+
 @media(max-width:480px){
-  .hero-title{font-size:2rem}
-  .logo{font-size:.95rem}
-  .logo-icon{width:38px;height:38px}
-  .food-emoji-grid{gap:.5rem}
+  /* Navbar */
+  .navbar{padding:.6rem 1rem}
+  .logo{font-size:.9rem}
+  .logo-icon{width:36px;height:36px}
+
+  /* Hero */
+  .hero{padding:4.5rem 1rem 2.5rem}
+  .hero-title{font-size:1.85rem}
+  .hero-subtitle{font-size:.9rem}
+  .hero-badge{font-size:.7rem}
+  .hero-buttons{flex-direction:column;align-items:center;gap:.7rem}
+  .hero-buttons .btn{width:100%;text-align:center}
+
+  /* Sections */
+  .specialties,.why-us,.story,.cta-section{padding:2rem 1rem}
+  .menu-section,.order-section{padding:1rem 1rem 2.5rem}
+  .menu-hero,.order-hero{padding:5rem 1rem 1.5rem}
+
+  /* Grids */
   .why-grid{grid-template-columns:1fr}
   .spec-grid{grid-template-columns:1fr}
+  .food-emoji-grid{gap:.5rem}
+
+  /* Cards */
+  .cta-card{padding:1.8rem 1rem}
+  .form-card{padding:1.5rem 1rem}
+  .hero-card{padding:1.2rem}
+  .info-card{padding:1.2rem}
+  .section-title{font-size:1.6rem}
 }

@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>@yield('title', 'Haji Quetta Paratha')</title>
+  <meta name="google-site-verification" content="ifHHErnHnOcjgyE4Hs94Mqa3uGuAnL-QEQkDvLjhR9w" />
   <meta name="description" content="@yield('description', 'Haji Quetta Paratha — Crispy Layers, Golden Perfection. Free Delivery in New Lahore City.')" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

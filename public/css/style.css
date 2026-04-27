@@ -82,7 +82,7 @@ body{
 .btn-outline:hover{background:rgba(27,94,32,.06);border-color:var(--green);transform:translateY(-2px)}
 
 /* HERO */
-.hero{min-height:100vh;display:flex;align-items:center;position:relative;z-index:1;padding:6rem 2rem 4rem;background:var(--grad-hero)}
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;z-index:1;padding:4.5rem 2rem 2rem;background:var(--grad-hero)}
 .hero-container{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center}
 .hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.38rem 1rem;background:rgba(255,143,0,.1);border:1px solid rgba(255,143,0,.3);border-radius:50px;font-size:.78rem;color:var(--amber-dark);letter-spacing:1px;text-transform:uppercase;margin-bottom:1.2rem;animation:fadeInDown .8s ease both;font-weight:700}
 .hero-badge .dot{width:7px;height:7px;background:var(--amber);border-radius:50%;animation:pulse-amber 2s infinite}
@@ -324,7 +324,7 @@ section{position:relative;z-index:1}
 .cta-card .btn-outline:hover{background:rgba(255,255,255,.15)}
 
 /* FOOTER */
-footer{padding:2.5rem 2rem;border-top:2px solid rgba(27,94,32,.1);text-align:center;position:relative;z-index:1;background:linear-gradient(135deg,#F1F8E9,#FFFDE7)}
+footer{padding:1.5rem 2rem;border-top:2px solid rgba(27,94,32,.1);text-align:center;position:relative;z-index:1;background:linear-gradient(135deg,#F1F8E9,#FFFDE7)}
 .footer-container{max-width:1200px;margin:0 auto}
 .footer-logo{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline-block;margin-bottom:.8rem}
 .footer-links{display:flex;justify-content:center;gap:2rem;list-style:none;margin-bottom:1rem;flex-wrap:wrap}
@@ -367,7 +367,7 @@ footer{padding:2.5rem 2rem;border-top:2px solid rgba(27,94,32,.1);text-align:cen
   .hamburger{display:flex}
 
   /* Hero */
-  .hero{padding:5rem 1.2rem 3rem}
+  .hero{min-height:auto;align-items:flex-start;padding:5rem 1.2rem 2.5rem}
   .hero-visual{display:none}
   .hero-title{font-size:clamp(1.9rem,6vw,2.8rem)}
 
@@ -400,7 +400,7 @@ footer{padding:2.5rem 2rem;border-top:2px solid rgba(27,94,32,.1);text-align:cen
   .logo-icon{width:36px;height:36px}
 
   /* Hero */
-  .hero{padding:4.5rem 1rem 2.5rem}
+  .hero{padding:4.5rem 1rem 2rem}
   .hero-title{font-size:1.85rem}
   .hero-subtitle{font-size:.9rem}
   .hero-badge{font-size:.7rem}

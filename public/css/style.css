@@ -367,18 +367,18 @@ footer{padding:1.5rem 2rem;border-top:2px solid rgba(27,94,32,.1);text-align:cen
   .hamburger{display:flex}
 
   /* Hero */
-  .hero{min-height:auto;align-items:flex-start;padding:5rem 1.2rem 2.5rem}
+  .hero{min-height:90vh;align-items:center;padding:5.5rem 1.5rem 3rem}
   .hero-visual{display:none}
   .hero-title{font-size:clamp(1.9rem,6vw,2.8rem)}
 
   /* Sections spacing */
-  .specialties{padding:2.5rem 1.2rem}
-  .why-us{padding:2.5rem 1.2rem}
-  .story{padding:2.5rem 1.2rem}
-  .cta-section{padding:2.5rem 1.2rem}
-  .menu-section{padding:1.2rem 1.2rem 3rem}
-  .order-section{padding:1.2rem 1.2rem 3rem}
-  .menu-hero,.order-hero{padding:5.5rem 1.2rem 2rem}
+  .specialties{padding:3.5rem 1.5rem}
+  .why-us{padding:3.5rem 1.5rem}
+  .story{padding:3.5rem 1.5rem}
+  .cta-section{padding:3rem 1.5rem}
+  .menu-section{padding:2rem 1.5rem 4rem}
+  .order-section{padding:2rem 1.5rem 4rem}
+  .menu-hero,.order-hero{padding:6rem 1.5rem 2.5rem}
 
   /* Cards & grids */
   .cta-card{padding:2rem 1.2rem}
@@ -400,7 +400,7 @@ footer{padding:1.5rem 2rem;border-top:2px solid rgba(27,94,32,.1);text-align:cen
   .logo-icon{width:36px;height:36px}
 
   /* Hero */
-  .hero{padding:4.5rem 1rem 2rem}
+  .hero{min-height:85vh;padding:5rem 1rem 2.5rem}
   .hero-title{font-size:1.85rem}
   .hero-subtitle{font-size:.9rem}
   .hero-badge{font-size:.7rem}
@@ -408,9 +408,9 @@ footer{padding:1.5rem 2rem;border-top:2px solid rgba(27,94,32,.1);text-align:cen
   .hero-buttons .btn{width:100%;text-align:center}
 
   /* Sections */
-  .specialties,.why-us,.story,.cta-section{padding:2rem 1rem}
-  .menu-section,.order-section{padding:1rem 1rem 2.5rem}
-  .menu-hero,.order-hero{padding:5rem 1rem 1.5rem}
+  .specialties,.why-us,.story,.cta-section{padding:3rem 1rem}
+  .menu-section,.order-section{padding:1.5rem 1rem 3rem}
+  .menu-hero,.order-hero{padding:5.5rem 1rem 2rem}
 
   /* Grids */
   .why-grid{grid-template-columns:1fr}

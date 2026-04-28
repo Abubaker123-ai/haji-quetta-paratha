@@ -17,9 +17,7 @@ class MenuItemSeeder extends Seeder
         $items = [
             // Parathas
             ['p1', 'Plain Paratha',         'Classic desi ghee paratha — crispy outside, soft inside.',                                 90,  'Parathas', "\u{1F959}", "{$img}p1.jpg", 1],
-            ['p2', 'Lacha Paratha',         'Multi-layered flaky paratha — each bite reveals another golden crispy layer.',            90,  'Parathas', "\u{1F959}", "{$img}p2.jpg", 2],
-            ['p3', 'Lacha Paratha (Large)', 'Larger size of our signature multi-layered flaky paratha.',                                130, 'Parathas', "\u{1F959}", "{$img}p2.jpg", 3],
-            ['p4', 'Special Lacha Paratha', 'Our signature — extra crispy golden layers with a rich desi ghee finish.',                 180, 'Parathas', "\u{1F959}", "{$img}p2.jpg", 4],
+            ['p4', 'Special Lacha Paratha', 'Our signature — extra crispy golden layers with a rich desi ghee finish.',                 180, 'Parathas', "\u{1F959}", "{$img}p4.jpg", 2],
             ['p5', 'Cheese Paratha',        'Melted cheese stuffed inside golden crispy layers — stretchy, gooey, delicious.',          130, 'Parathas', "\u{1F9C0}", "{$img}p5.jpg", 5],
             ['p6', 'Aloo Paratha',          'Spiced mashed potato filling inside a crispy paratha — a desi classic done right.',        90,  'Parathas', "\u{1F954}", "{$img}p6.jpg", 6],
             ['p7', 'Anda Paratha',          'Fresh egg cooked and folded inside a hot crispy paratha — wholesome and filling.',         100, 'Parathas', "\u{1F373}", "{$img}p7.jpg", 7],
@@ -52,7 +50,7 @@ class MenuItemSeeder extends Seeder
             );
         }
 
-        // Hard-delete Lassi items in case they still exist
-        MenuItem::whereIn('item_id', ['d4', 'd5', 'd6'])->delete();
+        // Hard-delete removed items
+        MenuItem::whereIn('item_id', ['d4', 'd5', 'd6', 'p2', 'p3'])->delete();
     }
 }

@@ -33,7 +33,7 @@ class MenuItemSeeder extends Seeder
 
             // Extras
             ['e1', 'Omelette',         'Fluffy fresh egg omelette — light, golden and made to order right on the tawa.',               70,  'Extras', "\u{1F373}", "{$img}e1.jpg", 13],
-            ['e2', 'Special Omelette', 'Double egg with extra masala, green chilli and onion — bold, spicy and filling.',              180, 'Extras', "\u{1F373}", "{$img}e1.jpg", 14],
+            ['e2', 'Special Omelette', 'Double egg with extra masala, green chilli and onion — bold, spicy and filling.',              180, 'Extras', "\u{1F373}", "{$img}e2.jpg", 14],
         ];
 
         foreach ($items as [$id, $name, $desc, $price, $cat, $emoji, $imgUrl, $sort]) {

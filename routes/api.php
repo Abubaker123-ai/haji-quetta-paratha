@@ -2,7 +2,22 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\MenuController;
 
+// Contact (existing)
 Route::post('/contact', [ContactController::class, 'apiStore']);
-
 Route::get('/contacts', [ContactController::class, 'apiIndex']);
+
+// Menu (public read, admin write)
+Route::get('/menu', [MenuController::class, 'index']);
+Route::post('/menu', [MenuController::class, 'store']);
+Route::put('/menu/{id}', [MenuController::class, 'update']);
+Route::patch('/menu/{id}/toggle', [MenuController::class, 'toggleAvailability']);
+Route::delete('/menu/{id}', [MenuController::class, 'destroy']);
+
+// Orders (public create, admin read/update)
+Route::post('/orders', [OrderController::class, 'store']);
+Route::get('/orders', [OrderController::class, 'index']);
+Route::patch('/orders/{id}/status', [OrderController::class, 'updateStatus']);
+Route::delete('/orders/{id}', [OrderController::class, 'destroy']);

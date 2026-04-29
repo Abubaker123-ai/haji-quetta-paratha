@@ -26,3 +26,4 @@ Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
 // Admin: debug + force seed
 Route::get('/admin/debug', [AdminController::class, 'debug']);
 Route::post('/admin/seed', [AdminController::class, 'seed']);
+Route::post('/admin/seed-admin-user', [AdminController::class, 'seedAdmin']);

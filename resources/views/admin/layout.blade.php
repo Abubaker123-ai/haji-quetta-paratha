@@ -119,6 +119,10 @@
                 <a href="{{ route('admin.messages') }}" class="{{ $route === 'admin.messages' ? 'active' : '' }}">
                     <span class="icon">⭐</span><span>Feedback</span>
                 </a>
+                <a href="{{ route('admin.shop') }}" class="{{ $route === 'admin.shop' ? 'active' : '' }}">
+                    @php $shopOpen = \App\Models\ShopSetting::instance()->effectivelyOpen(); @endphp
+                    <span class="icon">{{ $shopOpen ? '🟢' : '🔴' }}</span><span>Shop Control</span>
+                </a>
             </nav>
             <div class="nav-footer">
                 <div class="user">

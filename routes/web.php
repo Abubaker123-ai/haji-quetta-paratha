@@ -49,6 +49,10 @@ Route::prefix('admin')->group(function () {
 
         // Messages
         Route::get('/messages', [AdminPanelController::class, 'messagesIndex'])->name('admin.messages');
+
+        // Shop Control
+        Route::get('/shop', [\App\Http\Controllers\ShopController::class, 'index'])->name('admin.shop');
+        Route::post('/shop', [\App\Http\Controllers\ShopController::class, 'update'])->name('admin.shop.update');
     });
 });
 

@@ -6,6 +6,9 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\AdminController;
 
+// Shop status (public)
+Route::get('/shop/status', [\App\Http\Controllers\ShopController::class, 'apiStatus']);
+
 // Contact (existing)
 Route::post('/contact', [ContactController::class, 'apiStore']);
 Route::get('/contacts', [ContactController::class, 'apiIndex']);

@@ -30,7 +30,7 @@
                 };
                 $items = is_array($order->items) ? $order->items : (json_decode($order->items, true) ?: []);
             @endphp
-            <div class="card" style="margin-bottom:14px;border-left:4px solid {{ $borderColor }};">
+            <div class="card" id="order-card-{{ $order->id }}" data-name="{{ $order->customer_name }}" style="margin-bottom:14px;border-left:4px solid {{ $borderColor }};">
                 <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
                     <div>
                         <div style="font-size:16px;font-weight:700;color:#000;">Order #{{ $order->id }}
@@ -189,19 +189,28 @@
     }
 
     function sendWhatsApp(phone, orderId, items, total, address) {
-        const customMsg = document.getElementById('msg-' + orderId).value.trim();
-        if (!customMsg) {
-            alert('Pehle message likho — phir WhatsApp button dabao.');
+        const statusMsg = document.getElementById('msg-' + orderId).value.trim();
+        if (!statusMsg) {
+            alert('Please type a message first, then click Send WhatsApp.');
             return;
         }
-        const fullMsg = customMsg
-            + '\n\n━━━━━━━━━━━━━━━'
-            + '\n🧾 *Order #' + orderId + ' Details*'
-            + '\n' + items
-            + '\n\n💰 *Total:* Rs. ' + total
-            + '\n📍 *' + (address === 'Pickup' ? 'Pickup' : 'Address') + ':* ' + address
-            + '\n━━━━━━━━━━━━━━━'
-            + '\n\n— Haji Quetta Paratha';
+        // Get customer name from DOM
+        const card = document.getElementById('order-card-' + orderId);
+        const customerName = card ? card.dataset.name : 'Customer';
+
+        const isPickup = address === 'Pickup';
+        const fullMsg =
+            'Hello ' + customerName + ',\n\n'
+            + statusMsg + '\n\n'
+            + '📋 *Your Order Details:*\n'
+            + items + '\n\n'
+            + '💰 *Total:* Rs. ' + total + '\n'
+            + (isPickup
+                ? '🏪 *Type:* Pickup from restaurant'
+                : '📍 *Delivery Address:* ' + address)
+            + '\n🔖 *Order ID:* #' + orderId
+            + '\n\n— Haji Quetta Paratha\n📞 0312-7882163';
+
         const intlPhone = formatPkPhone(phone);
         const url = 'https://wa.me/' + intlPhone + '?text=' + encodeURIComponent(fullMsg);
         window.open(url, '_blank');

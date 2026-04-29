@@ -106,6 +106,33 @@
                 @if (!in_array($order->status, ['cancelled']))
                     <form action="{{ route('admin.orders.update', $order->id) }}" method="POST" style="margin-top:8px;background:#f9fafb;padding:14px;border-radius:8px;">
                         @csrf
+                        {{-- Quick action buttons --}}
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+                            @if($order->status === 'pending')
+                                <button type="submit" name="status" value="preparing"
+                                    style="flex:1;min-width:110px;background:#f59e0b;color:#fff;border:none;padding:10px 8px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">
+                                    🍳 Accept & Prepare
+                                </button>
+                            @endif
+                            @if(in_array($order->status, ['pending','preparing']))
+                                <button type="submit" name="status" value="ready"
+                                    style="flex:1;min-width:110px;background:#2563eb;color:#fff;border:none;padding:10px 8px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">
+                                    ✅ Mark Ready
+                                </button>
+                            @endif
+                            @if($order->status === 'ready')
+                                <button type="submit" name="status" value="completed"
+                                    style="flex:1;min-width:110px;background:#1B5E20;color:#fff;border:none;padding:10px 8px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">
+                                    🎉 Complete Order
+                                </button>
+                            @endif
+                            <button type="submit" name="status" value="cancelled"
+                                onclick="return confirm('Cancel this order?')"
+                                style="flex:1;min-width:110px;background:#dc2626;color:#fff;border:none;padding:10px 8px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">
+                                ❌ Cancel Order
+                            </button>
+                        </div>
+
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
                             <div>
                                 <label style="font-size:11px;font-weight:700;color:#000;display:block;margin-bottom:4px;">UPDATE STATUS</label>

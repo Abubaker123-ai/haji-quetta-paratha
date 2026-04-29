@@ -17,8 +17,9 @@ Route::put('/menu/{id}', [MenuController::class, 'update']);
 Route::patch('/menu/{id}/toggle', [MenuController::class, 'toggleAvailability']);
 Route::delete('/menu/{id}', [MenuController::class, 'destroy']);
 
-// Orders (public create, admin read/update)
+// Orders (public create + track, admin read/update)
 Route::post('/orders', [OrderController::class, 'store']);
+Route::get('/orders/{id}/track', [OrderController::class, 'track']);
 Route::get('/orders', [OrderController::class, 'index']);
 Route::patch('/orders/{id}/status', [OrderController::class, 'updateStatus']);
 Route::delete('/orders/{id}', [OrderController::class, 'destroy']);

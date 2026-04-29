@@ -12,6 +12,8 @@
     <div class="filter-tabs">
         <a href="{{ route('admin.orders') }}" class="{{ $filter === 'all' ? 'active' : '' }}">All</a>
         <a href="{{ route('admin.orders', ['filter' => 'pending']) }}" class="{{ $filter === 'pending' ? 'active' : '' }}">Pending</a>
+        <a href="{{ route('admin.orders', ['filter' => 'preparing']) }}" class="{{ $filter === 'preparing' ? 'active' : '' }}">Preparing</a>
+        <a href="{{ route('admin.orders', ['filter' => 'ready']) }}" class="{{ $filter === 'ready' ? 'active' : '' }}">Ready</a>
         <a href="{{ route('admin.orders', ['filter' => 'completed']) }}" class="{{ $filter === 'completed' ? 'active' : '' }}">Completed</a>
         <a href="{{ route('admin.orders', ['filter' => 'cancelled']) }}" class="{{ $filter === 'cancelled' ? 'active' : '' }}">Cancelled</a>
     </div>
@@ -21,8 +23,10 @@
             @php
                 $borderColor = match($order->status) {
                     'completed' => '#10b981',
+                    'ready'     => '#3b82f6',
+                    'preparing' => '#f59e0b',
                     'cancelled' => '#ef4444',
-                    default => '#f59e0b',
+                    default     => '#eab308',
                 };
                 $items = is_array($order->items) ? $order->items : (json_decode($order->items, true) ?: []);
             @endphp
@@ -80,19 +84,42 @@
                         </tbody>
                     </table>
                 @endif
-                @if ($order->status === 'pending')
-                    <div style="display:flex;gap:8px;">
-                        <form action="{{ route('admin.orders.update', $order->id) }}" method="POST" style="flex:1;">
-                            @csrf
-                            <input type="hidden" name="status" value="completed">
-                            <button type="submit" class="btn" style="width:100%;">✓ Mark Complete</button>
-                        </form>
-                        <form action="{{ route('admin.orders.update', $order->id) }}" method="POST" style="flex:1;" onsubmit="return confirm('Cancel this order?');">
-                            @csrf
-                            <input type="hidden" name="status" value="cancelled">
-                            <button type="submit" class="btn btn-danger" style="width:100%;">✕ Cancel</button>
-                        </form>
+                @if ($order->admin_message)
+                    <div style="margin-bottom:12px;padding:12px;background:#dbeafe;border-radius:8px;border-left:4px solid #3b82f6;">
+                        <div style="font-size:11px;font-weight:700;color:#1e40af;letter-spacing:0.05em;margin-bottom:4px;">YOUR MESSAGE TO CUSTOMER</div>
+                        <div style="color:#000;font-size:14px;">{{ $order->admin_message }}</div>
                     </div>
+                @endif
+                @if (!in_array($order->status, ['cancelled']))
+                    <form action="{{ route('admin.orders.update', $order->id) }}" method="POST" style="margin-top:8px;background:#f9fafb;padding:14px;border-radius:8px;">
+                        @csrf
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                            <div>
+                                <label style="font-size:11px;font-weight:700;color:#000;display:block;margin-bottom:4px;">UPDATE STATUS</label>
+                                <select name="status" style="width:100%;padding:9px;border:1px solid #d1d5db;border-radius:6px;font-size:14px;font-weight:600;">
+                                    <option value="pending"   {{ $order->status==='pending'?'selected':'' }}>🟡 Pending — Order received</option>
+                                    <option value="preparing" {{ $order->status==='preparing'?'selected':'' }}>🟠 Preparing — Cooking now</option>
+                                    <option value="ready"     {{ $order->status==='ready'?'selected':'' }}>🔵 Ready — Ready for pickup/delivery</option>
+                                    <option value="completed" {{ $order->status==='completed'?'selected':'' }}>🟢 Completed — Order delivered</option>
+                                    <option value="cancelled" {{ $order->status==='cancelled'?'selected':'' }}>🔴 Cancelled</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size:11px;font-weight:700;color:#000;display:block;margin-bottom:4px;">QUICK MESSAGE TEMPLATES</label>
+                                <select onchange="if(this.value) document.getElementById('msg-{{ $order->id }}').value=this.value;" style="width:100%;padding:9px;border:1px solid #d1d5db;border-radius:6px;font-size:13px;">
+                                    <option value="">Choose a template...</option>
+                                    <option value="Your order will be ready in 15-20 minutes.">Ready in 15-20 minutes</option>
+                                    <option value="Your order will be ready in 25-30 minutes.">Ready in 25-30 minutes</option>
+                                    <option value="Your order is ready! Please come for pickup.">Ready for pickup</option>
+                                    <option value="Your order is on the way. Driver will arrive in 10-15 minutes.">On the way (10-15 min)</option>
+                                    <option value="Sorry — we are currently out of one of the items. Please contact us.">Item out of stock</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label style="font-size:11px;font-weight:700;color:#000;display:block;margin-bottom:4px;">MESSAGE TO CUSTOMER (optional)</label>
+                        <textarea id="msg-{{ $order->id }}" name="admin_message" rows="2" placeholder="Type a message your customer will see in the app..." style="width:100%;padding:10px;border:1px solid #d1d5db;border-radius:6px;font-family:inherit;font-size:14px;resize:vertical;">{{ $order->admin_message }}</textarea>
+                        <button type="submit" class="btn" style="width:100%;margin-top:10px;padding:11px;font-size:14px;">💾 Save Status & Message</button>
+                    </form>
                 @endif
             </div>
         @empty

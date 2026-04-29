@@ -12,9 +12,11 @@ class Order extends Model
         'customer_address',
         'order_type',
         'notes',
+        'admin_message',
         'items',
         'total',
         'status',
+        'status_updated_at',
         'latitude',
         'longitude',
     ];
@@ -22,5 +24,6 @@ class Order extends Model
     protected $casts = [
         'items' => 'array',
         'total' => 'decimal:2',
+        'status_updated_at' => 'datetime',
     ];
 }

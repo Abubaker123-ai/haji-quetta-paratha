@@ -58,7 +58,9 @@
         td { padding: 14px 12px; border-bottom: 1px solid #f3f4f6; font-size: 14px; vertical-align: middle; }
         tr:last-child td { border-bottom: none; }
         .badge { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-        .badge-pending { background: #fef3c7; color: #92400e; }
+        .badge-pending { background: #fef9c3; color: #713f12; }
+        .badge-preparing { background: #ffedd5; color: #9a3412; }
+        .badge-ready { background: #dbeafe; color: #1e40af; }
         .badge-completed { background: #d1fae5; color: #065f46; }
         .badge-cancelled { background: #fee2e2; color: #991b1b; }
         .badge-available { background: #d1fae5; color: #065f46; }

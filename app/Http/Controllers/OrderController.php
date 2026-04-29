@@ -63,12 +63,39 @@ class OrderController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $request->validate(['status' => 'required|string']);
+        $request->validate([
+            'status'        => 'required|in:pending,preparing,ready,completed,cancelled',
+            'admin_message' => 'nullable|string|max:500',
+        ]);
 
         $order = Order::findOrFail($id);
-        $order->update(['status' => $request->status]);
+        $order->update([
+            'status'            => $request->status,
+            'admin_message'     => $request->admin_message,
+            'status_updated_at' => now(),
+        ]);
 
         return response()->json($order);
+    }
+
+    /**
+     * Public — customer can track an order by ID
+     */
+    public function track($id)
+    {
+        $order = Order::find($id);
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+        return response()->json([
+            'id'                => $order->id,
+            'status'            => $order->status,
+            'admin_message'     => $order->admin_message,
+            'order_type'        => $order->order_type,
+            'total'             => $order->total,
+            'status_updated_at' => $order->status_updated_at,
+            'created_at'        => $order->created_at,
+        ]);
     }
 
     public function destroy(Request $request, $id)

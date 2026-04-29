@@ -125,12 +125,17 @@ class AdminPanelController extends Controller
     public function orderUpdate(Request $request, $id)
     {
         $request->validate([
-            'status' => ['required', Rule::in(['pending', 'completed', 'cancelled'])],
+            'status' => ['required', Rule::in(['pending', 'preparing', 'ready', 'completed', 'cancelled'])],
+            'admin_message' => 'nullable|string|max:500',
         ]);
         $order = Order::findOrFail($id);
         $order->status = $request->status;
+        if ($request->has('admin_message')) {
+            $order->admin_message = $request->admin_message;
+        }
+        $order->status_updated_at = now();
         $order->save();
-        return back()->with('ok', "Order #$id marked {$request->status}.");
+        return back()->with('ok', "Order #$id updated to {$request->status}.");
     }
 
     public function ordersJson(Request $request)

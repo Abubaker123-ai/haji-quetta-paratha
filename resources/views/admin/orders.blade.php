@@ -172,6 +172,7 @@
 <script>
     let lastPendingCount = {{ $orders->where('status', 'pending')->count() }};
     let beepAudio = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ==');
+    let isReloading = false;
 
     function formatPkPhone(phone) {
         let clean = phone.replace(/\D/g, '');
@@ -192,25 +193,34 @@
     }
 
     async function pollOrders() {
+        if (isReloading) return;
         try {
             const res = await fetch('{{ route('admin.orders.json', ['filter' => $filter]) }}', {
-                headers: { 'Accept': 'application/json' }
+                headers: { 'Accept': 'application/json', 'Cache-Control': 'no-cache' }
             });
             if (!res.ok) return;
             const data = await res.json();
+
+            // Update sidebar badge instantly
             const badge = document.getElementById('sidebar-pending-badge');
             if (badge) badge.textContent = data.pending_count;
-            document.getElementById('lastUpdate').textContent = 'Live — last updated ' + new Date().toLocaleTimeString();
 
+            document.getElementById('lastUpdate').textContent =
+                'Live — last updated ' + new Date().toLocaleTimeString();
+
+            // New pending orders: reload once
             if (data.pending_count > lastPendingCount) {
+                isReloading = true;
                 try { beepAudio.play(); } catch(e) {}
-                window.location.reload();
+                setTimeout(() => window.location.reload(), 500);
             }
             lastPendingCount = data.pending_count;
         } catch (e) {
-            console.warn('Poll failed', e);
+            // silent fail — network issue
         }
     }
-    setInterval(pollOrders, 10000);
+
+    // Poll every 8 seconds (slightly faster)
+    setInterval(pollOrders, 8000);
 </script>
 @endpush

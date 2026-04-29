@@ -7,7 +7,8 @@
     <title>{{ $title ?? 'Admin' }} — Haji Quetta Paratha</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', -apple-system, sans-serif; background: #f3f4f6; color: #000; font-size: 15px; }
@@ -47,11 +48,11 @@
         .alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 18px; font-size: 14px; font-weight: 500; }
         .alert-ok { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
         .alert-err { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
-        .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03); padding: 20px; }
+        .card { background: #fff; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04); padding: 22px; border: 1px solid #f0f0f0; }
         .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
-        .stat { background: #fff; padding: 18px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .stat .label { font-size: 12px; color: #6b7280; font-weight: 500; }
-        .stat .value { font-size: 28px; font-weight: 800; color: #1B5E20; margin-top: 4px; }
+        .stat { background: #fff; padding: 20px; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); border: 1px solid #f0f0f0; }
+        .stat .label { font-size: 12px; color: #374151; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat .value { font-size: 30px; font-weight: 800; color: #1B5E20; margin-top: 6px; }
         .stat .accent { color: #f59e0b; }
         table { width: 100%; border-collapse: collapse; }
         th { text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; text-transform: uppercase; letter-spacing: 0.04em; }

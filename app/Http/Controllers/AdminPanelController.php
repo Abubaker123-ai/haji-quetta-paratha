@@ -8,6 +8,7 @@ use App\Models\MenuItem;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
@@ -49,13 +50,13 @@ class AdminPanelController extends Controller
 
     public function dashboard()
     {
-        $stats = [
+        $stats = Cache::remember('admin_dashboard_stats', 30, fn() => [
             'menu_total'    => MenuItem::count(),
             'menu_active'   => MenuItem::where('available', true)->count(),
             'orders_total'  => Order::count(),
             'orders_pending'=> Order::where('status', 'pending')->count(),
             'messages'      => Contact::count(),
-        ];
+        ]);
         $latestOrders = Order::orderByDesc('id')->limit(5)->get();
         return view('admin.dashboard', compact('stats', 'latestOrders'));
     }
@@ -164,14 +165,19 @@ class AdminPanelController extends Controller
     public function ordersJson(Request $request)
     {
         $filter = $request->query('filter', 'all');
-        $q = Order::orderByDesc('id');
+        $q = Order::orderByDesc('id')->select('id','status','created_at');
         if (in_array($filter, ['pending', 'preparing', 'ready', 'completed', 'cancelled'])) {
             $q->where('status', $filter);
         }
+        $pendingCount = Cache::remember('pending_orders_count', 5, fn() =>
+            Order::where('status', 'pending')->count()
+        );
         return response()->json([
-            'orders' => $q->limit(100)->get(),
-            'pending_count' => Order::where('status', 'pending')->count(),
-            'server_time' => now()->toIso8601String(),
+            'pending_count' => $pendingCount,
+            'server_time'   => now()->toIso8601String(),
+        ])->withHeaders([
+            'Cache-Control' => 'no-store',
+            'X-Accel-Buffering' => 'no',
         ]);
     }
 

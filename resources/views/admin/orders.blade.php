@@ -40,13 +40,32 @@
                         <div style="font-size:20px;font-weight:800;color:#1B5E20;">Rs. {{ (int) $order->total }}</div>
                     </div>
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:13px;margin-bottom:12px;padding:12px;background:#f9fafb;border-radius:8px;">
-                    <div><strong>👤 {{ $order->customer_name }}</strong><br><span style="color:#6b7280;">📞 {{ $order->customer_phone }}</span></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:14px;margin-bottom:12px;padding:14px;background:#f9fafb;border-radius:8px;color:#000;">
+                    <div>
+                        <div style="font-weight:700;font-size:15px;">👤 {{ $order->customer_name }}</div>
+                        <a href="tel:{{ $order->customer_phone }}" style="color:#1B5E20;font-weight:600;text-decoration:none;display:inline-block;margin-top:6px;">
+                            📞 {{ $order->customer_phone }}
+                        </a>
+                    </div>
                     @if ($order->order_type === 'delivery' && $order->customer_address)
-                        <div>📍 {{ $order->customer_address }}</div>
+                        <div>
+                            <div style="font-weight:600;">📍 Address</div>
+                            <div style="margin-top:4px;line-height:1.5;">{{ $order->customer_address }}</div>
+                            @if ($order->latitude && $order->longitude)
+                                <a href="https://www.google.com/maps/search/?api=1&query={{ $order->latitude }},{{ $order->longitude }}" target="_blank" class="btn btn-sm" style="background:#1976d2;margin-top:8px;display:inline-block;">
+                                    🗺️ Open on Google Maps
+                                </a>
+                            @else
+                                <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($order->customer_address) }}" target="_blank" class="btn btn-sm btn-secondary" style="margin-top:8px;display:inline-block;">
+                                    🗺️ Search Address on Maps
+                                </a>
+                            @endif
+                        </div>
                     @endif
                     @if ($order->notes)
-                        <div style="grid-column:1/-1;color:#6b7280;">📝 {{ $order->notes }}</div>
+                        <div style="grid-column:1/-1;padding:10px;background:#fef3c7;border-radius:6px;">
+                            <strong>📝 Customer Note:</strong> {{ $order->notes }}
+                        </div>
                     @endif
                 </div>
                 @if (!empty($items))

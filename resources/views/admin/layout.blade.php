@@ -10,7 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', -apple-system, sans-serif; background: #f3f4f6; color: #1f2937; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: #f3f4f6; color: #000; font-size: 15px; }
+        td, th, p, label, .form-row label, .badge, .alert { color: #000; }
         a { text-decoration: none; color: inherit; }
         .layout { display: flex; min-height: 100vh; }
         .sidebar { width: 240px; background: linear-gradient(180deg, #1B5E20, #2E7D32); color: #fff; padding: 24px 0; position: fixed; top: 0; bottom: 0; left: 0; }
@@ -113,7 +114,7 @@
                     <span class="icon">🍽️</span><span>Menu</span>
                 </a>
                 <a href="{{ route('admin.messages') }}" class="{{ $route === 'admin.messages' ? 'active' : '' }}">
-                    <span class="icon">💬</span><span>Messages</span>
+                    <span class="icon">⭐</span><span>Feedback</span>
                 </a>
             </nav>
             <div class="nav-footer">

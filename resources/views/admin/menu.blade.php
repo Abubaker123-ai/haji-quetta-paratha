@@ -33,21 +33,25 @@
                         <td>{{ $item->category }}</td>
                         <td><strong>Rs. {{ (int) $item->price }}</strong></td>
                         <td>
-                            <span class="badge badge-{{ $item->available ? 'available' : 'out' }}">
-                                {{ $item->available ? 'In Stock' : 'Out of Stock' }}
-                            </span>
+                            @if ($item->available)
+                                <span class="badge badge-available">✓ In Stock</span>
+                            @else
+                                <span class="badge badge-out">✕ Out of Stock</span>
+                            @endif
                         </td>
-                        <td style="text-align:right;">
+                        <td style="text-align:right;white-space:nowrap;">
                             <form action="{{ route('admin.menu.toggle', $item->id) }}" method="POST" style="display:inline;">
                                 @csrf
-                                <button type="submit" class="btn btn-sm {{ $item->available ? 'btn-warning' : 'btn-secondary' }}">
-                                    {{ $item->available ? 'Mark Out' : 'Mark Available' }}
-                                </button>
+                                @if ($item->available)
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Mark as out of stock">📤 Stock Out</button>
+                                @else
+                                    <button type="submit" class="btn btn-sm" style="background:#10b981;" title="Mark as in stock">📥 Stock In</button>
+                                @endif
                             </form>
-                            <button class="btn btn-sm btn-secondary" onclick='openEditModal(@json($item))'>Edit</button>
+                            <button class="btn btn-sm btn-secondary" onclick='openEditModal(@json($item))'>✎ Edit</button>
                             <form action="{{ route('admin.menu.destroy', $item->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Delete {{ $item->name }} permanently?');">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-sm btn-danger">🗑</button>
                             </form>
                         </td>
                     </tr>

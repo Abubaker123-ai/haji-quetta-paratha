@@ -50,6 +50,11 @@
                         <a href="tel:{{ $order->customer_phone }}" style="color:#1B5E20;font-weight:600;text-decoration:none;display:inline-block;margin-top:6px;">
                             📞 {{ $order->customer_phone }}
                         </a>
+                        @if ($order->customer_email)
+                            <div style="margin-top:4px;"><a href="mailto:{{ $order->customer_email }}" style="color:#1976d2;text-decoration:none;font-size:13px;">✉️ {{ $order->customer_email }}</a></div>
+                        @else
+                            <div style="margin-top:4px;color:#92400e;font-size:12px;">⚠️ No email — customer will not receive notifications</div>
+                        @endif
                     </div>
                     @if ($order->order_type === 'delivery' && $order->customer_address)
                         <div>

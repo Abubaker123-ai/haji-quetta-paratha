@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderStatusMail;
 use App\Models\Contact;
 use App\Models\MenuItem;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 class AdminPanelController extends Controller
@@ -129,13 +132,26 @@ class AdminPanelController extends Controller
             'admin_message' => 'nullable|string|max:500',
         ]);
         $order = Order::findOrFail($id);
+        $previousStatus = $order->status;
         $order->status = $request->status;
         if ($request->has('admin_message')) {
             $order->admin_message = $request->admin_message;
         }
         $order->status_updated_at = now();
         $order->save();
-        return back()->with('ok', "Order #$id updated to {$request->status}.");
+
+        $emailNote = '';
+        if ($order->customer_email && ($previousStatus !== $order->status || $request->admin_message)) {
+            try {
+                Mail::to($order->customer_email)->send(new OrderStatusMail($order, 'status_change'));
+                $emailNote = " Email sent to {$order->customer_email}.";
+            } catch (\Throwable $e) {
+                Log::warning("Admin email send failed for order #{$order->id}: " . $e->getMessage());
+                $emailNote = ' (Email could not be sent — check SMTP config.)';
+            }
+        }
+
+        return back()->with('ok', "Order #$id updated to {$request->status}.{$emailNote}");
     }
 
     public function ordersJson(Request $request)

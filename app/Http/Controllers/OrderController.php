@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderStatusMail;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -12,6 +15,7 @@ class OrderController extends Controller
         $request->validate([
             'customer_name'    => 'required|string|max:255',
             'customer_phone'   => 'required|string|max:30',
+            'customer_email'   => 'nullable|email|max:191',
             'customer_address' => 'nullable|string|max:1000',
             'order_type'       => 'required|in:pickup,delivery',
             'notes'            => 'nullable|string|max:1000',
@@ -30,6 +34,7 @@ class OrderController extends Controller
         $order = Order::create([
             'customer_name'    => $request->customer_name,
             'customer_phone'   => $request->customer_phone,
+            'customer_email'   => $request->customer_email,
             'customer_address' => $request->customer_address,
             'order_type'       => $request->order_type,
             'notes'            => $request->notes,
@@ -40,11 +45,29 @@ class OrderController extends Controller
             'status'           => 'pending',
         ]);
 
+        $this->safeSendEmail($order, 'received');
+
         return response()->json([
             'success' => true,
             'message' => 'Order placed successfully',
             'order'   => $order,
         ], 201);
+    }
+
+    /**
+     * Send the customer an email notification, swallowing errors so a mail
+     * outage never breaks the order/status API.
+     */
+    private function safeSendEmail(Order $order, string $kind = 'status_change'): void
+    {
+        if (!$order->customer_email) {
+            return;
+        }
+        try {
+            Mail::to($order->customer_email)->send(new OrderStatusMail($order, $kind));
+        } catch (\Throwable $e) {
+            Log::warning("Email send failed for order #{$order->id}: " . $e->getMessage());
+        }
     }
 
     public function index(Request $request)
@@ -69,11 +92,16 @@ class OrderController extends Controller
         ]);
 
         $order = Order::findOrFail($id);
+        $previousStatus = $order->status;
         $order->update([
             'status'            => $request->status,
             'admin_message'     => $request->admin_message,
             'status_updated_at' => now(),
         ]);
+
+        if ($previousStatus !== $order->status || $request->admin_message) {
+            $this->safeSendEmail($order, 'status_change');
+        }
 
         return response()->json($order);
     }

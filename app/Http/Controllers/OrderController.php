@@ -55,19 +55,26 @@ class OrderController extends Controller
     }
 
     /**
-     * Send the customer an email notification, swallowing errors so a mail
-     * outage never breaks the order/status API.
+     * Queue email AFTER the HTTP response is sent so the API stays fast.
+     * Mail errors are logged but never break the order flow.
      */
     private function safeSendEmail(Order $order, string $kind = 'status_change'): void
     {
         if (!$order->customer_email) {
             return;
         }
-        try {
-            Mail::to($order->customer_email)->send(new OrderStatusMail($order, $kind));
-        } catch (\Throwable $e) {
-            Log::warning("Email send failed for order #{$order->id}: " . $e->getMessage());
-        }
+        $orderId = $order->id;
+        $emailKind = $kind;
+        defer(function () use ($orderId, $emailKind) {
+            try {
+                $fresh = Order::find($orderId);
+                if ($fresh && $fresh->customer_email) {
+                    Mail::to($fresh->customer_email)->send(new OrderStatusMail($fresh, $emailKind));
+                }
+            } catch (\Throwable $e) {
+                Log::warning("Email send failed for order #{$orderId}: " . $e->getMessage());
+            }
+        });
     }
 
     public function index(Request $request)

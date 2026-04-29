@@ -118,7 +118,7 @@ class AdminPanelController extends Controller
     {
         $filter = $request->query('filter', 'all');
         $q = Order::orderByDesc('id');
-        if (in_array($filter, ['pending', 'completed', 'cancelled'])) {
+        if (in_array($filter, ['pending', 'preparing', 'ready', 'completed', 'cancelled'])) {
             $q->where('status', $filter);
         }
         $orders = $q->limit(100)->get();
@@ -140,15 +140,22 @@ class AdminPanelController extends Controller
         $order->status_updated_at = now();
         $order->save();
 
-        $emailNote = '';
+        // Send email after response (non-blocking)
         if ($order->customer_email && ($previousStatus !== $order->status || $request->admin_message)) {
-            try {
-                Mail::to($order->customer_email)->send(new OrderStatusMail($order, 'status_change'));
-                $emailNote = " Email sent to {$order->customer_email}.";
-            } catch (\Throwable $e) {
-                Log::warning("Admin email send failed for order #{$order->id}: " . $e->getMessage());
-                $emailNote = ' (Email could not be sent — check SMTP config.)';
-            }
+            $orderId = $order->id;
+            defer(function () use ($orderId) {
+                try {
+                    $fresh = Order::find($orderId);
+                    if ($fresh && $fresh->customer_email) {
+                        Mail::to($fresh->customer_email)->send(new OrderStatusMail($fresh, 'status_change'));
+                    }
+                } catch (\Throwable $e) {
+                    Log::warning("Admin email failed for order #{$orderId}: " . $e->getMessage());
+                }
+            });
+            $emailNote = $order->customer_email ? " Email notification queued for {$order->customer_email}." : '';
+        } else {
+            $emailNote = '';
         }
 
         return back()->with('ok', "Order #$id updated to {$request->status}.{$emailNote}");
@@ -158,7 +165,7 @@ class AdminPanelController extends Controller
     {
         $filter = $request->query('filter', 'all');
         $q = Order::orderByDesc('id');
-        if (in_array($filter, ['pending', 'completed', 'cancelled'])) {
+        if (in_array($filter, ['pending', 'preparing', 'ready', 'completed', 'cancelled'])) {
             $q->where('status', $filter);
         }
         return response()->json([

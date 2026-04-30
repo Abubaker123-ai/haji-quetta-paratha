@@ -162,6 +162,13 @@ class AdminPanelController extends Controller
         return back()->with('ok', "Order #$id updated to {$request->status}.{$emailNote}");
     }
 
+    public function orderDestroy($id)
+    {
+        $order = Order::findOrFail($id);
+        $order->delete();
+        return back()->with('ok', "Order #$id has been deleted.");
+    }
+
     public function ordersJson(Request $request)
     {
         $filter = $request->query('filter', 'all');

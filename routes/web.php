@@ -46,6 +46,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/orders', [AdminPanelController::class, 'ordersIndex'])->name('admin.orders');
         Route::get('/orders.json', [AdminPanelController::class, 'ordersJson'])->name('admin.orders.json');
         Route::post('/orders/{id}', [AdminPanelController::class, 'orderUpdate'])->name('admin.orders.update');
+        Route::delete('/orders/{id}', [AdminPanelController::class, 'orderDestroy'])->name('admin.orders.delete');
 
         // Messages
         Route::get('/messages', [AdminPanelController::class, 'messagesIndex'])->name('admin.messages');

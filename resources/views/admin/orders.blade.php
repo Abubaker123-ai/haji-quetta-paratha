@@ -1,5 +1,298 @@
 @extends('admin.layout', ['title' => 'Orders'])
 
+@push('head')
+<style>
+    /* === Order Card Redesign === */
+    .order-card {
+        margin-bottom: 18px;
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+    }
+    .order-card .status-strip {
+        position: absolute;
+        top: 0; left: 0; bottom: 0;
+        width: 4px;
+    }
+
+    /* Header */
+    .oc-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 18px 22px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .oc-header-left { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .oc-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .oc-title .order-id {
+        font-size: 17px; font-weight: 800; color: #fff;
+        letter-spacing: -0.01em;
+    }
+    .oc-meta {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 12.5px; color: rgba(255,255,255,0.6);
+        font-weight: 500;
+    }
+    .oc-meta .clock-icon {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 22px; height: 22px;
+        background: rgba(255,255,255,0.06);
+        border-radius: 50%; font-size: 11px;
+    }
+    .oc-header-right { text-align: right; flex-shrink: 0; }
+    .oc-total-label {
+        font-size: 10.5px; color: rgba(255,255,255,0.55);
+        font-weight: 700; letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    .oc-total-value {
+        font-size: 24px; font-weight: 800;
+        color: #fbbf24; margin-top: 2px;
+        letter-spacing: -0.02em;
+    }
+
+    /* Sections */
+    .oc-section { padding: 18px 22px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .oc-section:last-child { border-bottom: none; }
+    .oc-section-title {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 11px; font-weight: 700;
+        color: rgba(255,255,255,0.55);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 12px;
+    }
+    .oc-section-title .icon { font-size: 13px; opacity: 0.85; }
+
+    /* Customer info grid */
+    .oc-customer-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+    }
+    @media (max-width: 700px) {
+        .oc-customer-grid { grid-template-columns: 1fr; gap: 16px; }
+    }
+    .oc-info-item {
+        display: flex; align-items: flex-start; gap: 10px;
+        margin-bottom: 10px;
+    }
+    .oc-info-icon {
+        width: 28px; height: 28px; flex-shrink: 0;
+        background: rgba(96,165,250,0.15);
+        border: 1px solid rgba(96,165,250,0.25);
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 13px;
+    }
+    .oc-info-content { min-width: 0; flex: 1; }
+    .oc-info-label {
+        font-size: 10.5px; color: rgba(255,255,255,0.5);
+        font-weight: 600; text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+    .oc-info-value {
+        font-size: 14px; color: #fff; font-weight: 600;
+        margin-top: 1px; word-break: break-word;
+    }
+    .oc-info-value a { color: #93c5fd; text-decoration: none; }
+    .oc-info-value a:hover { color: #fff; text-decoration: underline; }
+    .wa-pill {
+        display: inline-flex; align-items: center; gap: 4px;
+        margin-left: 8px;
+        background: #25D366; color: #fff;
+        padding: 3px 10px; border-radius: 999px;
+        font-size: 11px; font-weight: 700;
+        text-decoration: none !important;
+        box-shadow: 0 2px 8px rgba(37,211,102,0.35);
+    }
+    .wa-pill:hover { background: #1ebe5a; color: #fff !important; }
+
+    /* Message boxes */
+    .oc-msg-box {
+        padding: 14px 16px;
+        border-radius: 10px;
+        line-height: 1.55;
+    }
+    .oc-msg-customer {
+        background: rgba(251,191,36,0.1);
+        border: 1px solid rgba(251,191,36,0.25);
+        color: #fde68a;
+    }
+    .oc-msg-customer strong { color: #fcd34d; }
+    .oc-msg-admin {
+        background: rgba(59,130,246,0.12);
+        border: 1px solid rgba(59,130,246,0.3);
+        border-left: 4px solid #60a5fa;
+        color: #dbeafe;
+    }
+    .oc-msg-label {
+        display: block;
+        font-size: 10.5px; font-weight: 700;
+        letter-spacing: 0.08em;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+    }
+
+    /* Items table */
+    .oc-items {
+        width: 100%; border-collapse: collapse;
+        background: rgba(255,255,255,0.03);
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.06);
+    }
+    .oc-items thead th {
+        background: rgba(255,255,255,0.04);
+        padding: 10px 14px;
+        font-size: 10.5px; font-weight: 700;
+        color: rgba(255,255,255,0.55);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        text-align: left;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .oc-items thead th.right { text-align: right; }
+    .oc-items thead th.center { text-align: center; }
+    .oc-items tbody td {
+        padding: 12px 14px;
+        font-size: 14px; color: #e5e7eb;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .oc-items tbody tr:last-child td { border-bottom: none; }
+    .oc-items tbody td.right { text-align: right; font-weight: 600; }
+    .oc-items tbody td.center { text-align: center; font-weight: 600; }
+    .oc-items tfoot td {
+        padding: 12px 14px;
+        font-size: 14.5px; font-weight: 700;
+        color: #fff;
+        background: rgba(255,255,255,0.04);
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .oc-items tfoot td.right { text-align: right; color: #fbbf24; font-size: 16px; }
+
+    /* Action area */
+    .oc-actions {
+        background: rgba(255,255,255,0.03);
+    }
+    .action-btn {
+        padding: 11px 14px;
+        border: none; border-radius: 10px;
+        font-size: 13px; font-weight: 700;
+        cursor: pointer;
+        transition: all 0.18s ease;
+        letter-spacing: 0.02em;
+        display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+        font-family: inherit;
+        color: #fff;
+    }
+    .action-btn:hover { transform: translateY(-1px); }
+    .action-btn:active { transform: translateY(0); }
+    .action-delete {
+        background: rgba(239,68,68,0.15);
+        border: 1px solid rgba(239,68,68,0.4);
+        color: #fca5a5;
+    }
+    .action-delete:hover {
+        background: rgba(239,68,68,0.3);
+        color: #fff;
+        border-color: rgba(239,68,68,0.6);
+    }
+
+    /* Status select + template */
+    .oc-update-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+    @media (max-width: 700px) {
+        .oc-update-grid { grid-template-columns: 1fr; }
+    }
+    .oc-update-grid label,
+    .oc-msg-textarea-label {
+        display: block;
+        font-size: 10.5px; font-weight: 700;
+        color: rgba(255,255,255,0.6);
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+    .oc-select, .oc-textarea {
+        width: 100%; padding: 10px 12px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 8px;
+        font-family: inherit; font-size: 13.5px;
+        color: #fff;
+        transition: all 0.18s ease;
+    }
+    .oc-select:focus, .oc-textarea:focus {
+        outline: none;
+        border-color: #60a5fa;
+        background: rgba(255,255,255,0.1);
+        box-shadow: 0 0 0 3px rgba(96,165,250,0.18);
+    }
+    .oc-select option { background: #0f172a; color: #fff; }
+    .oc-textarea { resize: vertical; min-height: 60px; }
+
+    .oc-final-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 12px;
+    }
+    @media (max-width: 700px) {
+        .oc-final-actions { grid-template-columns: 1fr; }
+    }
+    .btn-whatsapp {
+        background: #25D366;
+        color: #fff;
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 14px; font-weight: 700;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        transition: all 0.18s ease;
+        box-shadow: 0 2px 10px rgba(37,211,102,0.3);
+        font-family: inherit;
+    }
+    .btn-whatsapp:hover {
+        background: #1ebe5a;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px rgba(37,211,102,0.45);
+    }
+    .btn-save-status {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        color: #fff;
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 14px; font-weight: 700;
+        cursor: pointer;
+        transition: all 0.18s ease;
+        box-shadow: 0 2px 10px rgba(99,102,241,0.3);
+        font-family: inherit;
+    }
+    .btn-save-status:hover {
+        background: linear-gradient(135deg, #4f46e5, #4338ca);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px rgba(99,102,241,0.45);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 70px 30px;
+        color: rgba(255,255,255,0.55);
+    }
+    .empty-state .emoji { font-size: 56px; margin-bottom: 14px; }
+    .empty-state .title { font-weight: 700; font-size: 17px; color: #fff; margin-bottom: 4px; }
+</style>
+@endpush
+
 @section('content')
     <div class="page-head">
         <div>
@@ -30,143 +323,199 @@
                 };
                 $items = is_array($order->items) ? $order->items : (json_decode($order->items, true) ?: []);
             @endphp
-            <div class="card" id="order-card-{{ $order->id }}" data-name="{{ $order->customer_name }}" style="margin-bottom:14px;border-left:4px solid {{ $borderColor }};">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-                    <div>
-                        <div style="font-size:16px;font-weight:700;color:#000;">Order #{{ $order->id }}
-                            <span class="badge badge-{{ $order->status }}" style="margin-left:8px;">{{ $order->status }}</span>
-                            <span class="badge" style="background:#e0f2fe;color:#075985;margin-left:4px;">{{ ucfirst($order->order_type) }}</span>
+
+            <div class="card order-card" id="order-card-{{ $order->id }}" data-name="{{ $order->customer_name }}">
+                <span class="status-strip" style="background: {{ $borderColor }};"></span>
+
+                {{-- ===== HEADER ===== --}}
+                <div class="oc-header">
+                    <div class="oc-header-left">
+                        <div class="oc-title">
+                            <span class="order-id">Order #{{ $order->id }}</span>
+                            <span class="badge badge-{{ $order->status }}">{{ $order->status }}</span>
+                            <span class="badge" style="background:rgba(59,130,246,0.18);color:#93c5fd;border:1px solid rgba(59,130,246,0.3);">{{ ucfirst($order->order_type) }}</span>
                         </div>
-                        <div style="font-size:12px;color:#374151;margin-top:4px;font-weight:500;">{{ $order->created_at->format('M d, Y g:i A') }} ({{ $order->created_at->diffForHumans() }})</div>
+                        <div class="oc-meta">
+                            <span class="clock-icon">🕒</span>
+                            <span>{{ $order->created_at->format('M d, Y · g:i A') }}</span>
+                            <span style="opacity:0.5;">•</span>
+                            <span>{{ $order->created_at->diffForHumans() }}</span>
+                        </div>
                     </div>
-                    <div style="text-align:right;">
-                        <div style="font-size:11px;color:#374151;font-weight:600;">TOTAL</div>
-                        <div style="font-size:20px;font-weight:800;color:#1B5E20;">Rs. {{ (int) $order->total }}</div>
+                    <div class="oc-header-right">
+                        <div class="oc-total-label">Total</div>
+                        <div class="oc-total-value">Rs. {{ (int) $order->total }}</div>
                     </div>
                 </div>
 
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:14px;margin-bottom:12px;padding:14px;background:#f9fafb;border-radius:8px;color:#000;">
-                    <div>
-                        <div style="font-weight:700;font-size:15px;color:#000;">👤 {{ $order->customer_name }}</div>
-                        <a href="tel:{{ $order->customer_phone }}" style="color:#1B5E20;font-weight:700;text-decoration:none;display:inline-block;margin-top:6px;font-size:15px;">
-                            📞 {{ $order->customer_phone }}
-                        </a>
-                        {{-- WhatsApp quick call button --}}
-                        <a href="https://wa.me/{{ preg_replace('/^0/', '92', preg_replace('/\D/', '', $order->customer_phone)) }}"
-                           target="_blank"
-                           style="display:inline-block;margin-top:6px;margin-left:8px;background:#25D366;color:#fff;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;text-decoration:none;">
-                            💬 WhatsApp
-                        </a>
-                        @if ($order->customer_email)
-                            <div style="margin-top:4px;"><a href="mailto:{{ $order->customer_email }}" style="color:#1976d2;text-decoration:none;font-size:13px;font-weight:600;">✉️ {{ $order->customer_email }}</a></div>
-                        @endif
-                    </div>
-                    @if ($order->order_type === 'delivery' && $order->customer_address)
+                {{-- ===== CUSTOMER INFO ===== --}}
+                <div class="oc-section">
+                    <div class="oc-section-title"><span class="icon">👤</span> Customer Information</div>
+                    <div class="oc-customer-grid">
+                        {{-- LEFT: Name + Phone --}}
                         <div>
-                            <div style="font-weight:700;color:#000;">📍 Delivery Address</div>
-                            <div style="margin-top:4px;line-height:1.5;color:#000;">{{ $order->customer_address }}</div>
-                            @if ($order->latitude && $order->longitude)
-                                <a href="https://www.google.com/maps/search/?api=1&query={{ $order->latitude }},{{ $order->longitude }}" target="_blank" class="btn btn-sm" style="background:#1976d2;margin-top:8px;display:inline-block;">
-                                    🗺️ Open on Google Maps
-                                </a>
+                            <div class="oc-info-item">
+                                <div class="oc-info-icon">👤</div>
+                                <div class="oc-info-content">
+                                    <div class="oc-info-label">Name</div>
+                                    <div class="oc-info-value">{{ $order->customer_name }}</div>
+                                </div>
+                            </div>
+                            <div class="oc-info-item">
+                                <div class="oc-info-icon">📞</div>
+                                <div class="oc-info-content">
+                                    <div class="oc-info-label">Phone</div>
+                                    <div class="oc-info-value">
+                                        <a href="tel:{{ $order->customer_phone }}">{{ $order->customer_phone }}</a>
+                                        <a href="https://wa.me/{{ preg_replace('/^0/', '92', preg_replace('/\D/', '', $order->customer_phone)) }}"
+                                           target="_blank" class="wa-pill">💬 WhatsApp</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- RIGHT: Email + Address/Type --}}
+                        <div>
+                            @if ($order->customer_email)
+                                <div class="oc-info-item">
+                                    <div class="oc-info-icon">✉️</div>
+                                    <div class="oc-info-content">
+                                        <div class="oc-info-label">Email</div>
+                                        <div class="oc-info-value">
+                                            <a href="mailto:{{ $order->customer_email }}">{{ $order->customer_email }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            @if ($order->order_type === 'delivery' && $order->customer_address)
+                                <div class="oc-info-item">
+                                    <div class="oc-info-icon">📍</div>
+                                    <div class="oc-info-content">
+                                        <div class="oc-info-label">Delivery Address</div>
+                                        <div class="oc-info-value">{{ $order->customer_address }}</div>
+                                        @if ($order->latitude && $order->longitude)
+                                            <a href="https://www.google.com/maps/search/?api=1&query={{ $order->latitude }},{{ $order->longitude }}"
+                                               target="_blank" class="btn btn-sm" style="margin-top:8px;display:inline-flex;">
+                                                🗺️ Open on Maps
+                                            </a>
+                                        @else
+                                            <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($order->customer_address) }}"
+                                               target="_blank" class="btn btn-sm btn-secondary" style="margin-top:8px;display:inline-flex;">
+                                                🗺️ Search Maps
+                                            </a>
+                                        @endif
+                                    </div>
+                                </div>
                             @else
-                                <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($order->customer_address) }}" target="_blank" class="btn btn-sm btn-secondary" style="margin-top:8px;display:inline-block;">
-                                    🗺️ Search on Maps
-                                </a>
+                                <div class="oc-info-item">
+                                    <div class="oc-info-icon">🏪</div>
+                                    <div class="oc-info-content">
+                                        <div class="oc-info-label">Order Type</div>
+                                        <div class="oc-info-value">Pickup from restaurant</div>
+                                    </div>
+                                </div>
                             @endif
                         </div>
-                    @endif
-                    @if ($order->notes)
-                        <div style="grid-column:1/-1;padding:10px;background:#fef3c7;border-radius:6px;">
-                            <strong style="color:#000;">📝 Customer Note:</strong> <span style="color:#000;">{{ $order->notes }}</span>
-                        </div>
-                    @endif
+                    </div>
                 </div>
 
-                @if (!empty($items))
-                    <table style="margin-bottom:12px;width:100%;">
-                        <tbody>
-                            @foreach ($items as $line)
-                                <tr>
-                                    <td style="padding:6px 0;border:none;color:#000;font-weight:500;">{{ $line['name'] ?? '?' }} × {{ $line['quantity'] ?? 1 }}</td>
-                                    <td style="padding:6px 0;border:none;text-align:right;color:#000;font-weight:600;">Rs. {{ (int) (($line['price'] ?? 0) * ($line['quantity'] ?? 1)) }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                @endif
-
-                @if ($order->admin_message)
-                    <div style="margin-bottom:12px;padding:12px;background:#dbeafe;border-radius:8px;border-left:4px solid #3b82f6;">
-                        <div style="font-size:11px;font-weight:700;color:#1e40af;letter-spacing:0.05em;margin-bottom:4px;">YOUR MESSAGE TO CUSTOMER</div>
-                        <div style="color:#000;font-size:14px;font-weight:500;">{{ $order->admin_message }}</div>
+                {{-- ===== CUSTOMER MESSAGE (Note) ===== --}}
+                @if ($order->notes)
+                    <div class="oc-section">
+                        <div class="oc-section-title"><span class="icon">💬</span> Customer Message</div>
+                        <div class="oc-msg-box oc-msg-customer">
+                            <span class="oc-msg-label" style="color:#fcd34d;">📝 Note from {{ $order->customer_name }}</span>
+                            {{ $order->notes }}
+                        </div>
                     </div>
                 @endif
 
-                @if (!in_array($order->status, ['cancelled']))
-                    <form action="{{ route('admin.orders.update', $order->id) }}" method="POST" style="margin-top:8px;background:#f9fafb;padding:14px;border-radius:8px;">
-                        @csrf
-                        {{-- Quick action buttons --}}
-                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
-                            @if($order->status === 'pending')
-                                <button type="submit" name="status" value="preparing"
-                                    style="flex:1;min-width:120px;background:#d97706;color:#fff;border:none;padding:11px 12px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:0.02em;">
-                                    Accept &amp; Prepare
-                                </button>
-                            @endif
-                            @if(in_array($order->status, ['pending','preparing']))
-                                <button type="submit" name="status" value="ready"
-                                    style="flex:1;min-width:120px;background:#1d4ed8;color:#fff;border:none;padding:11px 12px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:0.02em;">
-                                    Mark as Ready
-                                </button>
-                            @endif
-                            @if($order->status === 'ready')
-                                <button type="submit" name="status" value="completed"
-                                    style="flex:1;min-width:120px;background:#15803d;color:#fff;border:none;padding:11px 12px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:0.02em;">
-                                    Complete Order
-                                </button>
-                            @endif
-                            <button type="submit" name="status" value="cancelled"
-                                onclick="return confirm('Cancel this order?')"
-                                style="flex:1;min-width:120px;background:#fff;color:#dc2626;border:1.5px solid #dc2626;padding:11px 12px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:0.02em;">
-                                Cancel Order
-                            </button>
+                {{-- ===== ORDER ITEMS ===== --}}
+                @if (!empty($items))
+                    <div class="oc-section">
+                        <div class="oc-section-title"><span class="icon">🍽️</span> Order Details</div>
+                        <table class="oc-items">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th class="center" style="width:80px;">Qty</th>
+                                    <th class="right" style="width:100px;">Price</th>
+                                    <th class="right" style="width:110px;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($items as $line)
+                                    @php
+                                        $price = (float) ($line['price'] ?? 0);
+                                        $qty = (int) ($line['quantity'] ?? 1);
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $line['name'] ?? '?' }}</td>
+                                        <td class="center">× {{ $qty }}</td>
+                                        <td class="right">Rs. {{ (int) $price }}</td>
+                                        <td class="right">Rs. {{ (int) ($price * $qty) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3">Grand Total</td>
+                                    <td class="right">Rs. {{ (int) $order->total }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                @endif
+
+                {{-- ===== ADMIN MESSAGE ===== --}}
+                @if ($order->admin_message)
+                    <div class="oc-section">
+                        <div class="oc-section-title"><span class="icon">📤</span> Your Reply to Customer</div>
+                        <div class="oc-msg-box oc-msg-admin">
+                            <span class="oc-msg-label" style="color:#93c5fd;">📨 Message Sent</span>
+                            {{ $order->admin_message }}
                         </div>
+                    </div>
+                @endif
 
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-                            <div>
-                                <label style="font-size:11px;font-weight:700;color:#000;display:block;margin-bottom:4px;">UPDATE STATUS</label>
-                                <select name="status" style="width:100%;padding:9px;border:1px solid #d1d5db;border-radius:6px;font-size:14px;font-weight:600;color:#000;">
-                                    <option value="pending"   {{ $order->status==='pending'?'selected':'' }}>🟡 Pending — Order received</option>
-                                    <option value="preparing" {{ $order->status==='preparing'?'selected':'' }}>🟠 Preparing — Cooking now</option>
-                                    <option value="ready"     {{ $order->status==='ready'?'selected':'' }}>🔵 Ready — For pickup/delivery</option>
-                                    <option value="completed" {{ $order->status==='completed'?'selected':'' }}>🟢 Completed — Order delivered</option>
-                                    <option value="cancelled" {{ $order->status==='cancelled'?'selected':'' }}>🔴 Cancelled</option>
-                                </select>
+                {{-- ===== ACTIONS ===== --}}
+                <div class="oc-section oc-actions">
+                    <div class="oc-section-title"><span class="icon">⚡</span> Quick Actions</div>
+
+                    @if (!in_array($order->status, ['cancelled', 'completed']))
+                        <form action="{{ route('admin.orders.update', $order->id) }}" method="POST">
+                            @csrf
+                            <div class="oc-update-grid">
+                                <div>
+                                    <label>Update Status</label>
+                                    <select name="status" class="oc-select">
+                                        <option value="pending"   {{ $order->status==='pending'?'selected':'' }}>🟡 Pending — Order received</option>
+                                        <option value="preparing" {{ $order->status==='preparing'?'selected':'' }}>🟠 Preparing — Cooking now</option>
+                                        <option value="ready"     {{ $order->status==='ready'?'selected':'' }}>🔵 Ready — For pickup/delivery</option>
+                                        <option value="completed" {{ $order->status==='completed'?'selected':'' }}>🟢 Completed — Order delivered</option>
+                                        <option value="cancelled" {{ $order->status==='cancelled'?'selected':'' }}>🔴 Cancelled</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Quick Message Templates</label>
+                                    <select onchange="if(this.value) document.getElementById('msg-{{ $order->id }}').value=this.value; this.selectedIndex=0;" class="oc-select">
+                                        <option value="">Choose a template...</option>
+                                        <option value="Your order has been received and we are now preparing it. It will be ready in 15–20 minutes. Thank you!">Preparing — 15-20 min</option>
+                                        <option value="Your order will be ready in 25–30 minutes. We appreciate your patience!">Preparing — 25-30 min</option>
+                                        <option value="Great news! Your order is ready for pickup. Please come at your convenience.">Ready for pickup</option>
+                                        <option value="Your order is on its way! Our delivery rider will arrive in 10–15 minutes.">On the way — 10-15 min</option>
+                                        <option value="Your order has been delivered. We hope you enjoy your meal! Thank you for choosing Haji Quetta Paratha.">Order delivered</option>
+                                        <option value="We are sorry, but one item in your order is currently unavailable. Please contact us to update your order.">Item unavailable</option>
+                                        <option value="We are sorry, but we are unable to accept your order at this time. Please try again later or contact us for assistance.">Order cancelled</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div>
-                                <label style="font-size:11px;font-weight:700;color:#000;display:block;margin-bottom:4px;">QUICK MESSAGE TEMPLATES</label>
-                                <select onchange="if(this.value) document.getElementById('msg-{{ $order->id }}').value=this.value; this.selectedIndex=0;" style="width:100%;padding:9px;border:1px solid #d1d5db;border-radius:6px;font-size:13px;color:#000;">
-                                    <option value="">Choose a template...</option>
-                                    <option value="Your order has been received and we are now preparing it. It will be ready in 15–20 minutes. Thank you!">Preparing — 15-20 min</option>
-                                    <option value="Your order will be ready in 25–30 minutes. We appreciate your patience!">Preparing — 25-30 min</option>
-                                    <option value="Great news! Your order is ready for pickup. Please come at your convenience.">Ready for pickup</option>
-                                    <option value="Your order is on its way! Our delivery rider will arrive in 10–15 minutes.">On the way — 10-15 min</option>
-                                    <option value="Your order has been delivered. We hope you enjoy your meal! Thank you for choosing Haji Quetta Paratha.">Order delivered</option>
-                                    <option value="We are sorry, but one item in your order is currently unavailable. Please contact us to update your order.">Item unavailable</option>
-                                    <option value="We are sorry, but we are unable to accept your order at this time. Please try again later or contact us for assistance.">Order cancelled</option>
-                                </select>
-                            </div>
-                        </div>
 
-                        <label style="font-size:11px;font-weight:700;color:#000;display:block;margin-bottom:4px;">MESSAGE TO CUSTOMER</label>
-                        <textarea id="msg-{{ $order->id }}" name="admin_message" rows="2"
-                            placeholder="Type your message — then click Send WhatsApp or Save..."
-                            style="width:100%;padding:10px;border:1px solid #d1d5db;border-radius:6px;font-family:inherit;font-size:14px;resize:vertical;color:#000;">{{ $order->admin_message }}</textarea>
+                            <label class="oc-msg-textarea-label">Message to Customer</label>
+                            <textarea id="msg-{{ $order->id }}" name="admin_message" rows="2"
+                                placeholder="Type your message — then click Send WhatsApp or Save..."
+                                class="oc-textarea">{{ $order->admin_message }}</textarea>
 
-                        {{-- Two action buttons --}}
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
-                            {{-- WhatsApp Send Button --}}
                             @php
                                 $waItems = collect($items)->map(fn($l) =>
                                     '• ' . ($l['name'] ?? '?') . ' x' . ($l['quantity'] ?? 1)
@@ -174,28 +523,42 @@
                                 $waAddress = ($order->order_type === 'delivery' && $order->customer_address)
                                     ? $order->customer_address : 'Pickup';
                             @endphp
-                            <button type="button"
-                                onclick="sendWhatsApp('{{ $order->customer_phone }}', '{{ $order->id }}', `{{ addslashes($waItems) }}`, '{{ (int)$order->total }}', '{{ addslashes($waAddress) }}')"
-                                style="background:#25D366;color:#fff;border:none;padding:12px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:0.02em;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white">
-                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                                </svg>
-                                Send on WhatsApp
-                            </button>
-
-                            {{-- Save Status Button --}}
-                            <button type="submit"
-                                style="background:#1e3a5f;color:#fff;border:none;padding:12px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:0.02em;">
-                                Save &amp; Update Status
-                            </button>
+                            <div class="oc-final-actions">
+                                <button type="button"
+                                    onclick="sendWhatsApp('{{ $order->customer_phone }}', '{{ $order->id }}', `{{ addslashes($waItems) }}`, '{{ (int)$order->total }}', '{{ addslashes($waAddress) }}')"
+                                    class="btn-whatsapp">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white">
+                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                                    </svg>
+                                    Send on WhatsApp
+                                </button>
+                                <button type="submit" class="btn-save-status">
+                                    💾 Save &amp; Update
+                                </button>
+                            </div>
+                        </form>
+                    @else
+                        <div style="color:rgba(255,255,255,0.6);font-size:13px;margin-bottom:12px;">
+                            This order is <strong style="color:#fff;text-transform:uppercase;">{{ $order->status }}</strong>. No status changes possible.
                         </div>
+                    @endif
+
+                    {{-- Delete button — always available --}}
+                    <form action="{{ route('admin.orders.delete', $order->id) }}" method="POST" style="margin-top:10px;"
+                          onsubmit="return confirm('Permanently delete Order #{{ $order->id }}? This cannot be undone.');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="action-btn action-delete" style="width:100%;padding:10px;">
+                            🗑️ Delete Order
+                        </button>
                     </form>
-                @endif
+                </div>
             </div>
         @empty
-            <div class="card" style="text-align:center;padding:50px;color:#374151;">
-                <div style="font-size:50px;margin-bottom:12px;">📭</div>
-                <div style="font-weight:600;font-size:16px;">No orders to show.</div>
+            <div class="card empty-state">
+                <div class="emoji">📭</div>
+                <div class="title">No orders to show</div>
+                <div>New orders will appear here automatically.</div>
             </div>
         @endforelse
     </div>
@@ -220,7 +583,6 @@
             alert('Please type a message first, then click Send WhatsApp.');
             return;
         }
-        // Get customer name from DOM
         const card = document.getElementById('order-card-' + orderId);
         const customerName = card ? card.dataset.name : 'Customer';
 
@@ -251,14 +613,12 @@
             if (!res.ok) return;
             const data = await res.json();
 
-            // Update sidebar badge instantly
             const badge = document.getElementById('sidebar-pending-badge');
             if (badge) badge.textContent = data.pending_count;
 
             document.getElementById('lastUpdate').textContent =
                 'Live — last updated ' + new Date().toLocaleTimeString();
 
-            // New pending orders: reload once
             if (data.pending_count > lastPendingCount) {
                 isReloading = true;
                 try { beepAudio.play(); } catch(e) {}
@@ -266,11 +626,10 @@
             }
             lastPendingCount = data.pending_count;
         } catch (e) {
-            // silent fail — network issue
+            // silent
         }
     }
 
-    // Poll every 8 seconds (slightly faster)
     setInterval(pollOrders, 8000);
 </script>
 @endpush

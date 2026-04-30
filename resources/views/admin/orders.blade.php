@@ -2,7 +2,7 @@
 
 @push('head')
 <style>
-    /* === Order Card Redesign === */
+    /* === Order Card Redesign — Light Mint Theme === */
     .order-card {
         margin-bottom: 18px;
         padding: 0;
@@ -21,116 +21,123 @@
         justify-content: space-between;
         align-items: flex-start;
         gap: 16px;
-        padding: 18px 22px;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
+        padding: 14px 20px;
+        border-bottom: 1px solid #d1fae5;
     }
-    .oc-header-left { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .oc-header-left { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
     .oc-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .oc-title .order-id {
-        font-size: 17px; font-weight: 800; color: #fff;
+        font-size: 17px; font-weight: 800; color: #064e3b;
         letter-spacing: -0.01em;
     }
     .oc-meta {
         display: flex; align-items: center; gap: 8px;
-        font-size: 12.5px; color: rgba(255,255,255,0.6);
+        font-size: 12.5px; color: #4b5563;
         font-weight: 500;
     }
     .oc-meta .clock-icon {
         display: inline-flex; align-items: center; justify-content: center;
-        width: 22px; height: 22px;
-        background: rgba(255,255,255,0.06);
-        border-radius: 50%; font-size: 11px;
+        width: 20px; height: 20px;
+        background: #ecfdf5;
+        border-radius: 50%; font-size: 10px;
     }
     .oc-header-right { text-align: right; flex-shrink: 0; }
     .oc-total-label {
-        font-size: 10.5px; color: rgba(255,255,255,0.55);
+        font-size: 10.5px; color: #047857;
         font-weight: 700; letter-spacing: 0.08em;
         text-transform: uppercase;
     }
     .oc-total-value {
         font-size: 24px; font-weight: 800;
-        color: #fbbf24; margin-top: 2px;
+        color: #064e3b; margin-top: 2px;
         letter-spacing: -0.02em;
     }
 
-    /* Sections */
-    .oc-section { padding: 18px 22px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    /* Sections — tighter padding */
+    .oc-section { padding: 13px 20px; border-bottom: 1px solid #ecfdf5; }
     .oc-section:last-child { border-bottom: none; }
     .oc-section-title {
         display: flex; align-items: center; gap: 8px;
-        font-size: 11px; font-weight: 700;
-        color: rgba(255,255,255,0.55);
+        font-size: 11px; font-weight: 800;
+        color: #047857;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
     }
-    .oc-section-title .icon { font-size: 13px; opacity: 0.85; }
+    .oc-section-title .icon { font-size: 13px; opacity: 0.95; }
 
-    /* Customer info grid */
+    /* Customer info grid — tighter */
     .oc-customer-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 22px;
+        gap: 14px;
     }
     @media (max-width: 700px) {
-        .oc-customer-grid { grid-template-columns: 1fr; gap: 16px; }
+        .oc-customer-grid { grid-template-columns: 1fr; gap: 8px; }
     }
     .oc-info-item {
-        display: flex; align-items: flex-start; gap: 10px;
-        margin-bottom: 10px;
+        display: flex; align-items: flex-start; gap: 9px;
+        margin-bottom: 6px;
     }
+    .oc-info-item:last-child { margin-bottom: 0; }
     .oc-info-icon {
-        width: 28px; height: 28px; flex-shrink: 0;
-        background: rgba(96,165,250,0.15);
-        border: 1px solid rgba(96,165,250,0.25);
+        width: 26px; height: 26px; flex-shrink: 0;
+        background: #d1fae5;
+        border: 1px solid #6ee7b7;
         border-radius: 8px;
         display: flex; align-items: center; justify-content: center;
-        font-size: 13px;
+        font-size: 12px;
+        color: #064e3b;
     }
     .oc-info-content { min-width: 0; flex: 1; }
     .oc-info-label {
-        font-size: 10.5px; color: rgba(255,255,255,0.5);
-        font-weight: 600; text-transform: uppercase;
+        font-size: 10px; color: #047857;
+        font-weight: 700; text-transform: uppercase;
         letter-spacing: 0.06em;
+        line-height: 1.3;
     }
     .oc-info-value {
-        font-size: 14px; color: #fff; font-weight: 600;
+        font-size: 14.5px; color: #111827; font-weight: 700;
         margin-top: 1px; word-break: break-word;
+        line-height: 1.35;
     }
-    .oc-info-value a { color: #93c5fd; text-decoration: none; }
-    .oc-info-value a:hover { color: #fff; text-decoration: underline; }
+    .oc-info-value a { color: #047857; text-decoration: none; font-weight: 700; }
+    .oc-info-value a:hover { color: #064e3b; text-decoration: underline; }
     .wa-pill {
         display: inline-flex; align-items: center; gap: 4px;
         margin-left: 8px;
-        background: #25D366; color: #fff;
+        background: #25D366; color: #fff !important;
         padding: 3px 10px; border-radius: 999px;
         font-size: 11px; font-weight: 700;
         text-decoration: none !important;
-        box-shadow: 0 2px 8px rgba(37,211,102,0.35);
+        box-shadow: 0 2px 8px rgba(37,211,102,0.3);
     }
     .wa-pill:hover { background: #1ebe5a; color: #fff !important; }
 
     /* Message boxes */
     .oc-msg-box {
-        padding: 14px 16px;
+        padding: 13px 16px;
         border-radius: 10px;
         line-height: 1.55;
+        font-size: 14px;
     }
     .oc-msg-customer {
-        background: rgba(251,191,36,0.1);
-        border: 1px solid rgba(251,191,36,0.25);
-        color: #fde68a;
+        background: #fef9c3;
+        border: 1px solid #fde047;
+        color: #713f12;
+        font-weight: 500;
     }
-    .oc-msg-customer strong { color: #fcd34d; }
+    .oc-msg-customer strong { color: #854d0e; }
     .oc-msg-admin {
-        background: rgba(59,130,246,0.12);
-        border: 1px solid rgba(59,130,246,0.3);
-        border-left: 4px solid #60a5fa;
-        color: #dbeafe;
+        background: #ecfdf5;
+        border: 1px solid #6ee7b7;
+        border-left: 4px solid #10b981;
+        color: #064e3b;
+        font-weight: 500;
     }
     .oc-msg-label {
         display: block;
-        font-size: 10.5px; font-weight: 700;
+        font-size: 10.5px; font-weight: 800;
         letter-spacing: 0.08em;
         margin-bottom: 6px;
         text-transform: uppercase;
@@ -139,43 +146,44 @@
     /* Items table */
     .oc-items {
         width: 100%; border-collapse: collapse;
-        background: rgba(255,255,255,0.03);
+        background: #f0fdf4;
         border-radius: 10px;
         overflow: hidden;
-        border: 1px solid rgba(255,255,255,0.06);
+        border: 1px solid #d1fae5;
     }
     .oc-items thead th {
-        background: rgba(255,255,255,0.04);
+        background: #d1fae5;
         padding: 10px 14px;
         font-size: 10.5px; font-weight: 700;
-        color: rgba(255,255,255,0.55);
+        color: #065f46;
         text-transform: uppercase;
         letter-spacing: 0.08em;
         text-align: left;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
+        border-bottom: 1px solid #6ee7b7;
     }
     .oc-items thead th.right { text-align: right; }
     .oc-items thead th.center { text-align: center; }
     .oc-items tbody td {
-        padding: 12px 14px;
-        font-size: 14px; color: #e5e7eb;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding: 11px 14px;
+        font-size: 14px; color: #111827;
+        border-bottom: 1px solid #d1fae5;
+        font-weight: 500;
     }
     .oc-items tbody tr:last-child td { border-bottom: none; }
-    .oc-items tbody td.right { text-align: right; font-weight: 600; }
-    .oc-items tbody td.center { text-align: center; font-weight: 600; }
+    .oc-items tbody td.right { text-align: right; font-weight: 700; }
+    .oc-items tbody td.center { text-align: center; font-weight: 700; }
     .oc-items tfoot td {
         padding: 12px 14px;
-        font-size: 14.5px; font-weight: 700;
-        color: #fff;
-        background: rgba(255,255,255,0.04);
-        border-top: 1px solid rgba(255,255,255,0.1);
+        font-size: 14.5px; font-weight: 800;
+        color: #064e3b;
+        background: #d1fae5;
+        border-top: 1px solid #6ee7b7;
     }
-    .oc-items tfoot td.right { text-align: right; color: #fbbf24; font-size: 16px; }
+    .oc-items tfoot td.right { text-align: right; color: #064e3b; font-size: 16px; }
 
     /* Action area */
     .oc-actions {
-        background: rgba(255,255,255,0.03);
+        background: #f0fdf4;
     }
     .action-btn {
         padding: 11px 14px;
@@ -186,19 +194,19 @@
         letter-spacing: 0.02em;
         display: inline-flex; align-items: center; justify-content: center; gap: 6px;
         font-family: inherit;
-        color: #fff;
     }
     .action-btn:hover { transform: translateY(-1px); }
     .action-btn:active { transform: translateY(0); }
     .action-delete {
-        background: rgba(239,68,68,0.15);
-        border: 1px solid rgba(239,68,68,0.4);
-        color: #fca5a5;
+        background: #fee2e2;
+        border: 1px solid #fca5a5;
+        color: #991b1b;
     }
     .action-delete:hover {
-        background: rgba(239,68,68,0.3);
-        color: #fff;
-        border-color: rgba(239,68,68,0.6);
+        background: #fecaca;
+        color: #7f1d1d;
+        border-color: #f87171;
+        box-shadow: 0 2px 10px rgba(239,68,68,0.2);
     }
 
     /* Status select + template */
@@ -215,27 +223,27 @@
     .oc-msg-textarea-label {
         display: block;
         font-size: 10.5px; font-weight: 700;
-        color: rgba(255,255,255,0.6);
+        color: #047857;
         margin-bottom: 6px;
         text-transform: uppercase;
         letter-spacing: 0.06em;
     }
     .oc-select, .oc-textarea {
         width: 100%; padding: 10px 12px;
-        background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(255,255,255,0.15);
+        background: #ffffff;
+        border: 1.5px solid #d1fae5;
         border-radius: 8px;
         font-family: inherit; font-size: 13.5px;
-        color: #fff;
+        color: #111827;
         transition: all 0.18s ease;
     }
     .oc-select:focus, .oc-textarea:focus {
         outline: none;
-        border-color: #60a5fa;
-        background: rgba(255,255,255,0.1);
-        box-shadow: 0 0 0 3px rgba(96,165,250,0.18);
+        border-color: #10b981;
+        background: #f0fdf4;
+        box-shadow: 0 0 0 3px rgba(16,185,129,0.18);
     }
-    .oc-select option { background: #0f172a; color: #fff; }
+    .oc-select option { background: #ffffff; color: #111827; }
     .oc-textarea { resize: vertical; min-height: 60px; }
 
     .oc-final-actions {
@@ -286,10 +294,10 @@
     .empty-state {
         text-align: center;
         padding: 70px 30px;
-        color: rgba(255,255,255,0.55);
+        color: #4b5563;
     }
     .empty-state .emoji { font-size: 56px; margin-bottom: 14px; }
-    .empty-state .title { font-weight: 700; font-size: 17px; color: #fff; margin-bottom: 4px; }
+    .empty-state .title { font-weight: 700; font-size: 17px; color: #064e3b; margin-bottom: 4px; }
 </style>
 @endpush
 
@@ -333,7 +341,7 @@
                         <div class="oc-title">
                             <span class="order-id">Order #{{ $order->id }}</span>
                             <span class="badge badge-{{ $order->status }}">{{ $order->status }}</span>
-                            <span class="badge" style="background:rgba(59,130,246,0.18);color:#93c5fd;border:1px solid rgba(59,130,246,0.3);">{{ ucfirst($order->order_type) }}</span>
+                            <span class="badge" style="background:#dbeafe;color:#1e40af;border:1px solid #93c5fd;">{{ ucfirst($order->order_type) }}</span>
                         </div>
                         <div class="oc-meta">
                             <span class="clock-icon">🕒</span>

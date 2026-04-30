@@ -12,12 +12,12 @@
         justify-content: space-between;
         align-items: flex-start;
         gap: 16px;
-        padding: 18px 22px;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
+        padding: 16px 20px;
+        border-bottom: 1px solid #d1fae5;
     }
     .msg-customer { display: flex; flex-direction: column; gap: 6px; }
     .msg-customer-name {
-        font-size: 17px; font-weight: 700; color: #fff;
+        font-size: 17px; font-weight: 700; color: #064e3b;
         display: flex; align-items: center; gap: 10px;
     }
     .msg-meta-row {
@@ -25,44 +25,46 @@
         align-items: center;
         font-size: 13px;
     }
-    .msg-meta-row a { color: #93c5fd; text-decoration: none; font-weight: 600; }
-    .msg-meta-row a:hover { color: #fff; }
+    .msg-meta-row a { color: #047857; text-decoration: none; font-weight: 700; }
+    .msg-meta-row a:hover { color: #064e3b; text-decoration: underline; }
     .msg-time {
         display: inline-flex; align-items: center; gap: 6px;
-        font-size: 12px; color: rgba(255,255,255,0.55);
-        font-weight: 500;
-        background: rgba(255,255,255,0.05);
+        font-size: 12px; color: #047857;
+        font-weight: 600;
+        background: #d1fae5;
         padding: 6px 12px;
         border-radius: 999px;
+        border: 1px solid #6ee7b7;
     }
     .msg-body {
-        padding: 18px 22px;
+        padding: 16px 20px;
     }
     .msg-section-title {
-        font-size: 11px; font-weight: 700;
-        color: rgba(255,255,255,0.55);
+        font-size: 11px; font-weight: 800;
+        color: #047857;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         display: flex; align-items: center; gap: 8px;
     }
     .msg-text {
-        background: rgba(96,165,250,0.08);
-        border: 1px solid rgba(96,165,250,0.2);
-        border-left: 4px solid #60a5fa;
+        background: #f0fdf4;
+        border: 1px solid #d1fae5;
+        border-left: 4px solid #10b981;
         padding: 14px 16px;
         border-radius: 10px;
         font-size: 14.5px;
         line-height: 1.6;
-        color: #dbeafe;
+        color: #111827;
+        font-weight: 500;
     }
     .empty-state {
         text-align: center;
         padding: 70px 30px;
-        color: rgba(255,255,255,0.55);
+        color: #4b5563;
     }
     .empty-state .emoji { font-size: 56px; margin-bottom: 14px; }
-    .empty-state .title { font-weight: 700; font-size: 17px; color: #fff; margin-bottom: 4px; }
+    .empty-state .title { font-weight: 700; font-size: 17px; color: #064e3b; margin-bottom: 4px; }
 </style>
 @endpush
 
@@ -85,7 +87,7 @@
                     <div class="msg-meta-row">
                         <a href="tel:{{ $m->phone }}">📞 {{ $m->phone }}</a>
                         @if ($m->address)
-                            <span style="color:rgba(255,255,255,0.7);">📍 {{ $m->address }}</span>
+                            <span style="color:#4b5563;">📍 {{ $m->address }}</span>
                         @endif
                     </div>
                 </div>

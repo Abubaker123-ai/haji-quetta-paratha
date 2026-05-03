@@ -232,8 +232,9 @@ section{position:relative;z-index:1}
 /* ORDER */
 .order-hero{min-height:33vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:7rem 2rem 2.5rem;position:relative;z-index:1;background:var(--grad-hero)}
 .order-section{padding:2rem 2rem 5rem;position:relative;z-index:1}
-.order-container{max-width:950px;margin:0 auto;display:grid;grid-template-columns:1fr 1.6fr;gap:2rem;align-items:start}
-.order-info{opacity:0;transform:translateX(-30px);transition:all .7s ease}
+.order-container{max-width:950px;margin:0 auto;display:grid;grid-template-columns:1fr 1.6fr;gap:2rem;align-items:stretch}
+.order-info{opacity:0;transform:translateX(-30px);transition:all .7s ease;display:flex;flex-direction:column}
+.order-info .form-card{flex:1}
 .order-info.visible{opacity:1;transform:translateX(0)}
 .order-info-title{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:.7rem;color:var(--text-dark)}
 .order-info-text{color:var(--text-gray);font-size:.88rem;line-height:1.7;margin-bottom:1.2rem}

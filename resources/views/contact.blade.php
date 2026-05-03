@@ -21,13 +21,15 @@
     <div class="order-container">
 
       <div class="order-info">
-        <h2 class="order-info-title">Direct Contact</h2>
-        <p class="order-info-text">Seedha call karein ya neeche form bhariein — hum jald jawab denge.</p>
-        <div class="order-details">
-          <div class="order-detail-item"><div class="o-icon">📞</div><div class="o-text"><strong>Call / WhatsApp</strong>0312-7882163</div></div>
-          <div class="order-detail-item"><div class="o-icon">📞</div><div class="o-text"><strong>Call / WhatsApp</strong>0323-7800007</div></div>
-          <div class="order-detail-item"><div class="o-icon">📍</div><div class="o-text"><strong>Location</strong>Shop #1, A17, Main Boulevard, New Lahore City</div></div>
-          <div class="order-detail-item"><div class="o-icon">👤</div><div class="o-text"><strong>Contact Person</strong>Zulfiqar Ali</div></div>
+        <div class="form-card">
+          <h2 class="order-info-title">Direct Contact</h2>
+          <p class="order-info-text">Seedha call karein ya neeche form bhariein — hum jald jawab denge.</p>
+          <div class="order-details">
+            <div class="order-detail-item"><div class="o-icon">📞</div><div class="o-text"><strong>Call / WhatsApp</strong>0312-7882163</div></div>
+            <div class="order-detail-item"><div class="o-icon">📞</div><div class="o-text"><strong>Call / WhatsApp</strong>0323-7800007</div></div>
+            <div class="order-detail-item"><div class="o-icon">📍</div><div class="o-text"><strong>Location</strong>Shop #1, A17, Main Boulevard, New Lahore City</div></div>
+            <div class="order-detail-item"><div class="o-icon">👤</div><div class="o-text"><strong>Contact Person</strong>Zulfiqar Ali</div></div>
+          </div>
         </div>
       </div>
 
